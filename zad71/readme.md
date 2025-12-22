@@ -8,4 +8,4 @@ wybór ilości klastrów w modelu treningowym
 ## dodanie funkcji odpowiedzialnej za przygotowanie opisów grup w modelu treningowym dostosowanej do streamlit  
 wybór nazwy pliku opisów modelu treningowego  
 możliwość dodania klucza api open ai w przypadku braku pliku env  
-##dodanie menu wyboru powyższych funkcji i obsługa ewentualnych wyjątków
+## dodanie menu wyboru powyższych funkcji i obsługa ewentualnych wyjątków
