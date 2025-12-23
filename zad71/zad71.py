@@ -5,6 +5,7 @@ from pycaret.clustering import setup, create_model, assign_model, plot_model, sa
 import plotly.express as px  # type: ignore
 from pathlib import Path
 import os
+import sys
 from dotenv import load_dotenv, set_key
 from openai import OpenAI
 
@@ -128,8 +129,9 @@ def get_all_participants(_data_model,new_data):
     return df_with_clusters
 
 base_path = os.path.dirname(__file__)
-current_dir = Path(__file__).parent
-#st.write(current_dir)
+current_dir = Path(__file__).resolve().parent
+if str(current_dir) not in sys.path:
+    sys.path.append(str(current_dir))
 
 if 'data_df' not in st.session_state:
     st.session_state.data_df = None
@@ -161,8 +163,8 @@ else:
         wybrany_plik = st.selectbox("Wybierz plik modelu treningowego:", lista_pkl)
             
         if st.button("Wczytaj dane"):
-            #st.write(Path(current_dir / wybrany_plik).stem)
-            st.session_state.d_model = get_model(str((current_dir / wybrany_plik).with_suffix('')))
+            wybrany_plik = wybrany_plik.replace('.pkl', '')
+            st.session_state.d_model = get_model(current_dir / wybrany_plik)
             st.success(f"Pomyślnie wczytano: {wybrany_plik}")
             if st.button("OK"):
                 st.rerun()
