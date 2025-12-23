@@ -21,7 +21,7 @@ current_dir = Path(__file__).parent.absolute()
  #   sys.path.append(str(current_dir))
 
 
-@st.cache_data
+#@st.cache_data
 def handle_openai_key():
     env_path = Path(".env")
     
