@@ -197,7 +197,7 @@ else:
             #lista_pkl = [f.name for f in current_dir.iterdir() if f.is_file() and f.suffix == ".json"]
             #if lista_pkl:
             # 2. Wyświetlamy rozwijaną listę (selectbox)
-            wybrany_plik = st.selectbox("Wybierz plik opisu grup modelu treningowego:", lista_pkl)
+            wybrany_plik = st.selectbox("Wybierz plik opisu grup modelu treningowego:", lista_json)
             
             if st.button("Wczytaj dane"):
                 st.session_state.json_cluster_names_and_descriptions = get_cluster_names_and_descriptions(current_dir / wybrany_plik)
