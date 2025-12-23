@@ -138,7 +138,7 @@ def get_all_participants(_data_model,new_data):
 if 'data_df' not in st.session_state:
     st.session_state.data_df = None
 if st.session_state.data_df is None:
-    lista_csv = [f.name for f in current_dir.iterdir() if f.is_file() and f.suffix == ".csv"]
+    lista_csv = [f.name for f in current_dir.glob("*.csv")]
     if lista_csv:
         # 2. Wyświetlamy rozwijaną listę (selectbox)
         wybrany_plik = st.selectbox("Wybierz plik danych do analizy:", lista_csv)
@@ -159,7 +159,7 @@ else:
     if 'd_model' not in st.session_state:
         st.session_state.d_model = None
     if st.session_state.d_model is None:
-        lista_pkl = [f.name for f in current_dir.iterdir() if f.is_file() and f.suffix == ".pkl"]
+        lista_pkl = [f.name for f in current_dir.glob("*.pkl")]
         #if lista_pkl:
         # 2. Wyświetlamy rozwijaną listę (selectbox)
         wybrany_plik = st.selectbox("Wybierz plik modelu treningowego:", lista_pkl)
@@ -193,7 +193,8 @@ else:
         if 'json_cluster_names_and_descriptions' not in st.session_state:
             st.session_state.json_cluster_names_and_descriptions = None
         if st.session_state.json_cluster_names_and_descriptions is None:
-            lista_pkl = [f.name for f in current_dir.iterdir() if f.is_file() and f.suffix == ".json"]
+            lista_json = [f.name for f in current_dir.glob("*.json")]
+            #lista_pkl = [f.name for f in current_dir.iterdir() if f.is_file() and f.suffix == ".json"]
             #if lista_pkl:
             # 2. Wyświetlamy rozwijaną listę (selectbox)
             wybrany_plik = st.selectbox("Wybierz plik opisu grup modelu treningowego:", lista_pkl)
