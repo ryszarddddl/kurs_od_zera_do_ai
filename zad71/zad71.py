@@ -1,29 +1,29 @@
 import sys
-import os
 import types
 from pathlib import Path
 
-# 1. Ustalenie ścieżki katalogu
+# 1. Lokalizacja folderu
 current_dir = Path(__file__).resolve().parent
 
-# 2. MECHANIZM NAPRAWCZY DLA MODUŁU 'zad71'
-# Pickle próbuje zaimportować 'zad71', więc tworzymy go w locie
+# 2. Rozwiązanie ModuleNotFoundError: zad71
+# Jeśli model szuka czegokolwiek w 'zad71', przekieruj go na ten skrypt
 if 'zad71' not in sys.modules:
-    # Pobieramy bieżący moduł (który Streamlit nazywa __main__)
-    import __main__
-    # Tworzymy alias w sys.modules, aby 'import zad71' zwracało obecny skrypt
-    sys.modules['zad71'] = __main__
+    # Tworzymy wirtualny moduł o nazwie zad71
+    mock_zad71 = types.ModuleType('zad71')
+    sys.modules['zad71'] = mock_zad71
     
     # Dodajemy folder do ścieżek wyszukiwania
     if str(current_dir) not in sys.path:
         sys.path.insert(0, str(current_dir))
+    
+    # Kopiujemy zawartość skryptu głównego do wirtualnego modułu
+    import __main__
+    mock_zad71.__dict__.update(__main__.__dict__)
 
-# 3. DOPIERO TERAZ DALSZE IMPORTY
+# 3. Dopiero teraz importy reszty
 import streamlit as st
-from pycaret.clustering import load_model, set_config
-# ... reszta importów ...
-
 import joblib
+# ... reszta importów
 import json
 import pandas as pd  # type: ignore
 import plotly.express as px  # type: ignore
@@ -133,14 +133,10 @@ def make_descriptions(_data_model,new_data,FILE_CLUSTER_NAMES_AND_DESCRIPTIONS,a
 
 #@st.cache_data
 def get_model(MODEL_NAME):
-    # 1. Przygotuj poprawną ścieżkę (dodaj .pkl jeśli brakuje)
-    model_path = str(Path(MODEL_NAME).with_suffix('.pkl'))
-    
-    # 2. Wczytaj model bezpośrednio przez joblib
-    # To omija błąd ModuleNotFoundError: zad71
-    loaded_pipeline = joblib.load(model_path)
-    
-    return loaded_pipeline
+    # Upewnij się, że ścieżka kończy się na .pkl
+    path = Path(MODEL_NAME).with_suffix('.pkl')
+    # Załaduj czysty model
+    return joblib.load(str(path))
 
 @st.cache_data
 def get_cluster_names_and_descriptions(CLUSTER_NAMES_AND_DESCRIPTIONS):
