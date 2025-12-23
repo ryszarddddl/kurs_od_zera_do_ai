@@ -1,29 +1,28 @@
 import sys
 import types
+import os
 from pathlib import Path
 
-# 1. Lokalizacja folderu
+# 1. Definiujemy ścieżki
 current_dir = Path(__file__).resolve().parent
 
-# 2. Rozwiązanie ModuleNotFoundError: zad71
-# Jeśli model szuka czegokolwiek w 'zad71', przekieruj go na ten skrypt
+# 2. MECHANIZM NAPRAWCZY DLA PICKLE
+# Jeśli model szuka 'zad71', przekieruj go na ten skrypt
 if 'zad71' not in sys.modules:
-    # Tworzymy wirtualny moduł o nazwie zad71
-    mock_zad71 = types.ModuleType('zad71')
-    sys.modules['zad71'] = mock_zad71
+    # Pobieramy bieżący moduł (który Streamlit nazywa __main__)
+    import __main__
+    # Tworzymy alias w sys.modules, aby 'import zad71' zwracało obecny skrypt
+    sys.modules['zad71'] = __main__
     
     # Dodajemy folder do ścieżek wyszukiwania
     if str(current_dir) not in sys.path:
         sys.path.insert(0, str(current_dir))
-    
-    # Kopiujemy zawartość skryptu głównego do wirtualnego modułu
-    import __main__
-    mock_zad71.__dict__.update(__main__.__dict__)
 
-# 3. Dopiero teraz importy reszty
+# 3. DOPIERO TERAZ IMPORTY
 import streamlit as st
 import joblib
 # ... reszta importów
+
 import json
 import pandas as pd  # type: ignore
 import plotly.express as px  # type: ignore
@@ -133,9 +132,9 @@ def make_descriptions(_data_model,new_data,FILE_CLUSTER_NAMES_AND_DESCRIPTIONS,a
 
 #@st.cache_data
 def get_model(MODEL_NAME):
-    # Upewnij się, że ścieżka kończy się na .pkl
+    # Ścieżka musi być absolutna
     path = Path(MODEL_NAME).with_suffix('.pkl')
-    # Załaduj czysty model
+    # joblib.load zadziała, bo sys.modules['zad71'] już istnieje
     return joblib.load(str(path))
 
 @st.cache_data
