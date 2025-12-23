@@ -161,7 +161,8 @@ else:
         wybrany_plik = st.selectbox("Wybierz plik modelu treningowego:", lista_pkl)
             
         if st.button("Wczytaj dane"):
-            st.session_state.d_model = get_model(Path(wybrany_plik).stem)
+            #st.write(Path(current_dir / wybrany_plik).stem)
+            st.session_state.d_model = get_model(Path(current_dir / wybrany_plik).stem)
             st.success(f"Pomyślnie wczytano: {wybrany_plik}")
             if st.button("OK"):
                 st.rerun()
