@@ -129,7 +129,7 @@ def get_all_participants(_data_model,new_data):
 
 base_path = os.path.dirname(__file__)
 current_dir = Path(__file__).parent
-st.write(current_dir)
+#st.write(current_dir)
 
 if 'data_df' not in st.session_state:
     st.session_state.data_df = None
@@ -141,8 +141,7 @@ if st.session_state.data_df is None:
     
         # 3. Akcja po wyborze (np. wczytanie ramki danych)
         if st.button("Wczytaj dane"):
-            st.write(current_dir.wybrany_plik)
-            st.session_state.data_df = pd.read_csv(current_dir.wybrany_plik, sep=';')
+            st.session_state.data_df = pd.read_csv(current_dir / wybrany_plik, sep=';')
             st.success(f"Pomyślnie wczytano: {wybrany_plik}")
             st.dataframe(st.session_state.data_df.head())
             if st.button("OK"):
@@ -194,7 +193,7 @@ else:
             wybrany_plik = st.selectbox("Wybierz plik opisu grup modelu treningowego:", lista_pkl)
             
             if st.button("Wczytaj dane"):
-                st.session_state.json_cluster_names_and_descriptions = get_cluster_names_and_descriptions(str(wybrany_plik))
+                st.session_state.json_cluster_names_and_descriptions = get_cluster_names_and_descriptions(current_dir / wybrany_plik)
                 st.success(f"Pomyślnie wczytano: {wybrany_plik}")
                 if st.button("OK"):
                     st.rerun()
