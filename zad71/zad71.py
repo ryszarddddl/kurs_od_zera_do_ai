@@ -121,7 +121,7 @@ def make_descriptions(_data_model,new_data,FILE_CLUSTER_NAMES_AND_DESCRIPTIONS,a
         f.write(json.dumps(cluster_names_and_descriptions))
     
 
-@st.cache_data
+#@st.cache_data
 def get_model(MODEL_NAME):
     return load_model(MODEL_NAME)
 
