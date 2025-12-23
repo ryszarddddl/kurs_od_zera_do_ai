@@ -20,9 +20,10 @@ if 'zad71' not in sys.modules:
 
 # 3. DOPIERO TERAZ DALSZE IMPORTY
 import streamlit as st
-from pycaret.clustering import load_model
+from pycaret.clustering import load_model, set_config
 # ... reszta importów ...
 
+import joblib
 import json
 import pandas as pd  # type: ignore
 import plotly.express as px  # type: ignore
@@ -132,7 +133,14 @@ def make_descriptions(_data_model,new_data,FILE_CLUSTER_NAMES_AND_DESCRIPTIONS,a
 
 #@st.cache_data
 def get_model(MODEL_NAME):
-    return load_model(MODEL_NAME)
+    # 1. Przygotuj poprawną ścieżkę (dodaj .pkl jeśli brakuje)
+    model_path = str(Path(MODEL_NAME).with_suffix('.pkl'))
+    
+    # 2. Wczytaj model bezpośrednio przez joblib
+    # To omija błąd ModuleNotFoundError: zad71
+    loaded_pipeline = joblib.load(model_path)
+    
+    return loaded_pipeline
 
 @st.cache_data
 def get_cluster_names_and_descriptions(CLUSTER_NAMES_AND_DESCRIPTIONS):
