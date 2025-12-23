@@ -9,17 +9,18 @@ import os
 import sys
 from pathlib import Path
 
-# To pobiera folder, w którym znajduje się plik zad71.py
-# resolve() zamienia ścieżkę na absolutną i usuwa błędy typu "zad71/zad71"
-current_dir = Path(__file__).parent.absolute()
+# Ustalanie ścieżek
+file_path = Path(__file__).resolve()
+current_dir = file_path.parent  # /mount/src/kurs_od_zera_do_ai/zad71
+parent_dir = current_dir.parent  # /mount/src/kurs_od_zera_do_ai
 
-# Ustawiamy katalog roboczy na ten folder (ważne dla PyCaret)
-#os.chdir(str(current_dir))
+# Dodajemy folder nadrzędny do sys.path, aby 'import zad71' działało
+if str(parent_dir) not in sys.path:
+    sys.path.insert(0, str(parent_dir))
 
-# Dodajemy do sys.path, aby model widział lokalne moduły
-#if str(current_dir) not in sys.path:
- #   sys.path.append(str(current_dir))
-
+# Tworzymy alias: jeśli model szuka modułu 'zad71', dajemy mu obecny skrypt
+import zad71
+sys.modules['zad71'] = sys.modules['__main__']
 
 #@st.cache_data
 def handle_openai_key():
