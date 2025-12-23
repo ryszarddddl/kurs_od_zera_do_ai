@@ -138,11 +138,6 @@ def get_all_participants(_data_model,new_data):
     df_with_clusters = predict_model(_data_model, data = new_data)
     return df_with_clusters
 
-base_path = os.path.dirname(__file__)
-current_dir = Path(__file__).resolve().parent
-if str(current_dir) not in sys.path:
-    sys.path.append(str(current_dir))
-
 if 'data_df' not in st.session_state:
     st.session_state.data_df = None
 if st.session_state.data_df is None:
