@@ -62,7 +62,7 @@ def build_model(MODEL_NAME,DATA,num_clusters=8):
     plot_model(kmeans, plot='cluster', display_format='streamlit')
     save_model(kmeans, MODEL_NAME, verbose=False)
 
-@st.cache_data
+#@st.cache_data
 def make_descriptions(_data_model,new_data,FILE_CLUSTER_NAMES_AND_DESCRIPTIONS):
     api_key = handle_openai_key()
     openai_client = OpenAI(api_key=api_key)
