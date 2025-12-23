@@ -1,27 +1,29 @@
 import sys
 import types
-import os
 from pathlib import Path
 
-# 1. Definiujemy ścieżki
+# 1. Ścieżki bezwzględne
 current_dir = Path(__file__).resolve().parent
 
-# 2. MECHANIZM NAPRAWCZY DLA PICKLE
-# Jeśli model szuka 'zad71', przekieruj go na ten skrypt
+# 2. MECHANIZM NAPRAWCZY DLA MODUŁU 'zad71'
+# Jeśli pickle szuka 'zad71', dajemy mu aktualnie działający skrypt
 if 'zad71' not in sys.modules:
-    # Pobieramy bieżący moduł (który Streamlit nazywa __main__)
-    import __main__
-    # Tworzymy alias w sys.modules, aby 'import zad71' zwracało obecny skrypt
-    sys.modules['zad71'] = __main__
+    # Tworzymy wirtualny moduł o nazwie zad71
+    mock_zad71 = types.ModuleType('zad71')
+    sys.modules['zad71'] = mock_zad71
     
-    # Dodajemy folder do ścieżek wyszukiwania
+    # Dodajemy bieżący katalog do ścieżek wyszukiwania
     if str(current_dir) not in sys.path:
         sys.path.insert(0, str(current_dir))
+    
+    # Kopiujemy atrybuty z głównego modułu (__main__) do zad71
+    # To pozwala modelowi znaleźć klasy zdefiniowane w tym pliku
+    import __main__
+    mock_zad71.__dict__.update(__main__.__dict__)
 
-# 3. DOPIERO TERAZ IMPORTY
+# 3. DOPIERO TERAZ IMPORTY RESZTY
 import streamlit as st
 import joblib
-# ... reszta importów
 
 import json
 import pandas as pd  # type: ignore
@@ -131,11 +133,10 @@ def make_descriptions(_data_model,new_data,FILE_CLUSTER_NAMES_AND_DESCRIPTIONS,a
     
 
 #@st.cache_data
-def get_model(MODEL_NAME):
-    # Ścieżka musi być absolutna
-    path = Path(MODEL_NAME).with_suffix('.pkl')
-    # joblib.load zadziała, bo sys.modules['zad71'] już istnieje
-    return joblib.load(str(path))
+def get_model(MODEL_PATH):
+    # Wymuś pełną ścieżkę z rozszerzeniem .pkl
+    full_path = str(Path(MODEL_PATH).with_suffix('.pkl'))
+    return joblib.load(full_path)
 
 @st.cache_data
 def get_cluster_names_and_descriptions(CLUSTER_NAMES_AND_DESCRIPTIONS):
