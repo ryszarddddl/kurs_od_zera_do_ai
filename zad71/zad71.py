@@ -162,7 +162,7 @@ else:
             
         if st.button("Wczytaj dane"):
             #st.write(Path(current_dir / wybrany_plik).stem)
-            st.session_state.d_model = get_model(Path(current_dir / wybrany_plik).stem)
+            st.session_state.d_model = get_model(str((current_dir / wybrany_plik).with_suffix('')))
             st.success(f"Pomyślnie wczytano: {wybrany_plik}")
             if st.button("OK"):
                 st.rerun()
