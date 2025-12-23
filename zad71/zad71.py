@@ -11,8 +11,7 @@ from openai import OpenAI
 #MODEL_NAME = 'welcome_survey_clustering_pipeline_v1'
 #DATA = 'welcome_survey_simple_v1.csv'
 #CLUSTER_NAMES_AND_DESCRIPTIONS = 'welcome_survey_cluster_names_and_descriptions_v1.json'
-base_path = os.path.dirname(__file__)
-current_dir = Path(__file__).parent
+
 
 @st.cache_data
 def handle_openai_key():
@@ -127,6 +126,10 @@ def get_cluster_names_and_descriptions(CLUSTER_NAMES_AND_DESCRIPTIONS):
 def get_all_participants(_data_model,new_data):
     df_with_clusters = predict_model(_data_model, data = new_data)
     return df_with_clusters
+
+base_path = os.path.dirname(__file__)
+current_dir = Path(__file__).parent
+st.write(current_dir)
 
 if 'data_df' not in st.session_state:
     st.session_state.data_df = None
