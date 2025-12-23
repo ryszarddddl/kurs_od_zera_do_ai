@@ -4,3 +4,4 @@ pycaret
 plotly
 dotenv
 openai
+scikit-learn
