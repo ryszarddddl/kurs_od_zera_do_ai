@@ -3,11 +3,21 @@ import streamlit as st
 import pandas as pd  # type: ignore
 from pycaret.clustering import setup, create_model, assign_model, plot_model, save_model, load_model, predict_model # type: ignore
 import plotly.express as px  # type: ignore
-from pathlib import Path
-import os
-import sys
 from dotenv import load_dotenv, set_key
 from openai import OpenAI
+import sys
+import os
+from pathlib import Path
+
+# Uzyskaj absolutną ścieżkę do folderu, w którym jest ten skrypt
+current_dir = Path(__file__).parent.resolve()
+
+# Dodaj ten folder do sys.path, aby model mógł importować Twoje funkcje
+if str(current_dir) not in sys.path:
+    sys.path.append(str(current_dir))
+
+# Opcjonalnie: ustaw katalog roboczy na folder ze skryptem
+os.chdir(current_dir)
 
 #MODEL_NAME = 'welcome_survey_clustering_pipeline_v1'
 #DATA = 'welcome_survey_simple_v1.csv'
@@ -164,7 +174,8 @@ else:
             
         if st.button("Wczytaj dane"):
             wybrany_plik = wybrany_plik.replace('.pkl', '')
-            st.session_state.d_model = get_model(str((current_dir / wybrany_plik).with_suffix('')))
+            full_model_path = os.path.join(str(current_dir), os.path.basename(wybrany_plik))
+            st.session_state.d_model = get_model(full_model_path)
             st.success(f"Pomyślnie wczytano: {wybrany_plik}")
             if st.button("OK"):
                 st.rerun()
