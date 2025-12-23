@@ -1,32 +1,35 @@
-import json
+import sys
+import os
+import types  # DODAJ TĘ LINIĘ - naprawia NameError
+from pathlib import Path
+
+# 1. Definiujemy ścieżkę do folderu ze skryptem
+current_dir = Path(__file__).resolve().parent
+
+# 2. Mapowanie modułu zad71 (naprawia ModuleNotFoundError przy ładowaniu modelu)
+if 'zad71' not in sys.modules:
+    # Tworzymy wirtualny moduł zad71
+    m = types.ModuleType('zad71')
+    sys.modules['zad71'] = m
+    # Dodajemy folder do ścieżek wyszukiwania
+    if str(current_dir) not in sys.path:
+        sys.path.insert(0, str(current_dir))
+    # Łączymy wirtualny moduł z kodem, który właśnie działa (__main__)
+    import __main__
+    m.__dict__.update(__main__.__dict__)
+
 import streamlit as st
-import pandas as pd  # type: ignore
 from pycaret.clustering import setup, create_model, assign_model, plot_model, save_model, load_model, predict_model # type: ignore
+# ... reszta Twoich importów ...
+
+
+import json
+import pandas as pd  # type: ignore
 import plotly.express as px  # type: ignore
 from dotenv import load_dotenv, set_key
 from openai import OpenAI
-import os
-import sys
-from pathlib import Path
 
-# 1. Definiujemy ścieżkę
-current_dir = Path(__file__).resolve().parent
-
-# 2. Tworzymy "sztuczny" moduł zad71 w pamięci
-if 'zad71' not in sys.modules:
-    # Tworzymy pusty moduł
-    mock_metadata = types.ModuleType('zad71')
-    sys.modules['zad71'] = mock_metadata
-    
-    # Dodajemy bieżący katalog do ścieżek wyszukiwania
-    if str(current_dir) not in sys.path:
-        sys.path.insert(0, str(current_dir))
-    
-    # Rejestrujemy bieżący skrypt (uruchomiony jako __main__) pod nazwą zad71
-    # Dzięki temu pickle znajdzie klasy wewnątrz zad71.py
-    import __main__
-    sys.modules['zad71'] = __main__
-    
+  
 #@st.cache_data
 def handle_openai_key():
     env_path = Path(".env")
