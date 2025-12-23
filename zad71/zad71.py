@@ -5,23 +5,20 @@ from pycaret.clustering import setup, create_model, assign_model, plot_model, sa
 import plotly.express as px  # type: ignore
 from dotenv import load_dotenv, set_key
 from openai import OpenAI
-import sys
 import os
+import sys
 from pathlib import Path
 
-# Uzyskaj absolutną ścieżkę do folderu, w którym jest ten skrypt
+# To pobiera folder, w którym znajduje się plik zad71.py
+# resolve() zamienia ścieżkę na absolutną i usuwa błędy typu "zad71/zad71"
 current_dir = Path(__file__).parent.resolve()
 
-# Dodaj ten folder do sys.path, aby model mógł importować Twoje funkcje
+# Ustawiamy katalog roboczy na ten folder (ważne dla PyCaret)
+os.chdir(str(current_dir))
+
+# Dodajemy do sys.path, aby model widział lokalne moduły
 if str(current_dir) not in sys.path:
     sys.path.append(str(current_dir))
-
-# Opcjonalnie: ustaw katalog roboczy na folder ze skryptem
-os.chdir(current_dir)
-
-#MODEL_NAME = 'welcome_survey_clustering_pipeline_v1'
-#DATA = 'welcome_survey_simple_v1.csv'
-#CLUSTER_NAMES_AND_DESCRIPTIONS = 'welcome_survey_cluster_names_and_descriptions_v1.json'
 
 
 @st.cache_data
