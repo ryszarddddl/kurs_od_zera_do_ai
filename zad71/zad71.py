@@ -9,21 +9,19 @@ import os
 import sys
 from pathlib import Path
 
-# Ustalanie ścieżek
+# Definiujemy ścieżki
 current_dir = Path(__file__).resolve().parent
-parent_dir = current_dir.parent
 
-# Dodanie folderów do ścieżek wyszukiwania
+# Dodajemy folder do ścieżek wyszukiwania Pythona
 if str(current_dir) not in sys.path:
     sys.path.insert(0, str(current_dir))
-if str(parent_dir) not in sys.path:
-    sys.path.insert(0, str(parent_dir))
 
-# KLUCZOWE: Alias modułu zad71
-try:
-    import zad71
-except ImportError:
-    # Jeśli Python nie widzi zad71 jako modułu, przypisujemy go ręcznie
+# SZTUCZKA: Tworzymy alias modułu 'zad71', aby model mógł go znaleźć
+# To rozwiązuje ModuleNotFoundError: No module named 'zad71'
+import types
+if 'zad71' not in sys.modules:
+    # Pobieramy bieżący moduł (który Streamlit nazywa __main__)
+    # i rejestrujemy go w systemie pod nazwą, której szuka model
     sys.modules['zad71'] = sys.modules.get('__main__')
 
 #@st.cache_data
@@ -171,7 +169,8 @@ else:
             
         if st.button("Wczytaj dane"):
             wybrany_plik = wybrany_plik.replace('.pkl', '')
-            full_model_path = os.path.join(str(current_dir), os.path.basename(wybrany_plik))
+            clean_model_name = Path(wybrany_plik).stem  # Pobiera nazwę bez .pkl
+            full_model_path = str(current_dir / clean_model_name)
             st.session_state.d_model = get_model(full_model_path)
             st.success(f"Pomyślnie wczytano: {wybrany_plik}")
             if st.button("OK"):
