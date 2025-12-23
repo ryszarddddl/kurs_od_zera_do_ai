@@ -11,14 +11,14 @@ from pathlib import Path
 
 # To pobiera folder, w którym znajduje się plik zad71.py
 # resolve() zamienia ścieżkę na absolutną i usuwa błędy typu "zad71/zad71"
-current_dir = Path(__file__).parent.resolve()
+current_dir = Path(__file__).parent.absolute()
 
 # Ustawiamy katalog roboczy na ten folder (ważne dla PyCaret)
-os.chdir(str(current_dir))
+#os.chdir(str(current_dir))
 
 # Dodajemy do sys.path, aby model widział lokalne moduły
-if str(current_dir) not in sys.path:
-    sys.path.append(str(current_dir))
+#if str(current_dir) not in sys.path:
+ #   sys.path.append(str(current_dir))
 
 
 @st.cache_data
