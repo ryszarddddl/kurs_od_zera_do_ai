@@ -1,26 +1,23 @@
 import sys
 import os
-import types  # DODAJ TĘ LINIĘ - naprawia NameError
+import types
 from pathlib import Path
 
-# 1. Definiujemy ścieżkę do folderu ze skryptem
+# 1. Ścieżki
 current_dir = Path(__file__).resolve().parent
 
-# 2. Mapowanie modułu zad71 (naprawia ModuleNotFoundError przy ładowaniu modelu)
+# 2. Absolutne wymuszenie modułu zad71
+# Pickle szuka 'zad71', więc tworzymy go w sys.modules zanim cokolwiek go wywoła
 if 'zad71' not in sys.modules:
-    # Tworzymy wirtualny moduł zad71
-    m = types.ModuleType('zad71')
-    sys.modules['zad71'] = m
-    # Dodajemy folder do ścieżek wyszukiwania
-    if str(current_dir) not in sys.path:
-        sys.path.insert(0, str(current_dir))
-    # Łączymy wirtualny moduł z kodem, który właśnie działa (__main__)
     import __main__
-    m.__dict__.update(__main__.__dict__)
+    # Tworzymy moduł w pamięci i kopiujemy tam wszystko z głównego skryptu
+    zad71_module = types.ModuleType('zad71')
+    zad71_module.__dict__.update(__main__.__dict__)
+    sys.modules['zad71'] = zad71_module
 
+# 3. Dopiero teraz importujemy Streamlit i PyCaret
 import streamlit as st
-from pycaret.clustering import setup, create_model, assign_model, plot_model, save_model, load_model, predict_model # type: ignore
-# ... reszta Twoich importów ...
+from pycaret.clustering import load_model
 
 
 import json
