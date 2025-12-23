@@ -1,24 +1,29 @@
 import sys
-import os
 import types
 from pathlib import Path
 
-# 1. Ścieżki
+# 1. Definicja ścieżki
 current_dir = Path(__file__).resolve().parent
 
-# 2. Absolutne wymuszenie modułu zad71
-# Pickle szuka 'zad71', więc tworzymy go w sys.modules zanim cokolwiek go wywoła
+# 2. MECHANIZM NAPRAWCZY DLA PICKLE
+# Tworzymy wirtualny moduł 'zad71', aby model mógł zaimportować swoje klasy
 if 'zad71' not in sys.modules:
+    # Tworzymy pusty obiekt modułu
+    mock_zad71 = types.ModuleType('zad71')
+    # Rejestrujemy go w systemie
+    sys.modules['zad71'] = mock_zad71
+    # Dodajemy bieżący katalog do ścieżek
+    if str(current_dir) not in sys.path:
+        sys.path.insert(0, str(current_dir))
+    
+    # Kopiujemy zawartość obecnego skryptu do modułu 'zad71'
+    # Dzięki temu model znajdzie w nim swoje definicje
     import __main__
-    # Tworzymy moduł w pamięci i kopiujemy tam wszystko z głównego skryptu
-    zad71_module = types.ModuleType('zad71')
-    zad71_module.__dict__.update(__main__.__dict__)
-    sys.modules['zad71'] = zad71_module
+    mock_zad71.__dict__.update(__main__.__dict__)
 
-# 3. Dopiero teraz importujemy Streamlit i PyCaret
+# 3. DOPIERO TERAZ IMPORTY STREAMLIT I PYCARET
 import streamlit as st
 from pycaret.clustering import load_model
-
 
 import json
 import pandas as pd  # type: ignore
