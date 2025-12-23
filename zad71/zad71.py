@@ -138,7 +138,7 @@ if st.session_state.data_df is None:
     
         # 3. Akcja po wyborze (np. wczytanie ramki danych)
         if st.button("Wczytaj dane"):
-            st.session_state.data_df = pd.read_csv(wybrany_plik, sep=';')
+            st.session_state.data_df = pd.read_csv(Path(wybrany_plik), sep=';')
             st.success(f"Pomyślnie wczytano: {wybrany_plik}")
             st.dataframe(st.session_state.data_df.head())
             if st.button("OK"):
@@ -190,7 +190,7 @@ else:
             wybrany_plik = st.selectbox("Wybierz plik opisu grup modelu treningowego:", lista_pkl)
             
             if st.button("Wczytaj dane"):
-                st.session_state.json_cluster_names_and_descriptions = get_cluster_names_and_descriptions(wybrany_plik)
+                st.session_state.json_cluster_names_and_descriptions = get_cluster_names_and_descriptions(Path(wybrany_plik))
                 st.success(f"Pomyślnie wczytano: {wybrany_plik}")
                 if st.button("OK"):
                     st.rerun()
