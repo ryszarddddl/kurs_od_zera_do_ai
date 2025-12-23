@@ -164,7 +164,7 @@ else:
             
         if st.button("Wczytaj dane"):
             wybrany_plik = wybrany_plik.replace('.pkl', '')
-            st.session_state.d_model = get_model(current_dir / wybrany_plik)
+            st.session_state.d_model = get_model(str((current_dir / wybrany_plik).with_suffix('')))
             st.success(f"Pomyślnie wczytano: {wybrany_plik}")
             if st.button("OK"):
                 st.rerun()
