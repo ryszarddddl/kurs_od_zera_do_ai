@@ -10,17 +10,21 @@ import sys
 from pathlib import Path
 
 # Ustalanie ścieżek
-file_path = Path(__file__).resolve()
-current_dir = file_path.parent  # /mount/src/kurs_od_zera_do_ai/zad71
-parent_dir = current_dir.parent  # /mount/src/kurs_od_zera_do_ai
+current_dir = Path(__file__).resolve().parent
+parent_dir = current_dir.parent
 
-# Dodajemy folder nadrzędny do sys.path, aby 'import zad71' działało
+# Dodanie folderów do ścieżek wyszukiwania
+if str(current_dir) not in sys.path:
+    sys.path.insert(0, str(current_dir))
 if str(parent_dir) not in sys.path:
     sys.path.insert(0, str(parent_dir))
 
-# Tworzymy alias: jeśli model szuka modułu 'zad71', dajemy mu obecny skrypt
-import zad71
-sys.modules['zad71'] = sys.modules['__main__']
+# KLUCZOWE: Alias modułu zad71
+try:
+    import zad71
+except ImportError:
+    # Jeśli Python nie widzi zad71 jako modułu, przypisujemy go ręcznie
+    sys.modules['zad71'] = sys.modules.get('__main__')
 
 #@st.cache_data
 def handle_openai_key():
