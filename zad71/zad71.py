@@ -9,21 +9,24 @@ import os
 import sys
 from pathlib import Path
 
-# Ustalenie ścieżki
+# 1. Definiujemy ścieżkę
 current_dir = Path(__file__).resolve().parent
 
-# Dodanie folderu do ścieżek
-if str(current_dir) not in sys.path:
-    sys.path.insert(0, str(current_dir))
-
-# MAPOWANIE MODUŁU:
-# Jeśli model szuka 'zad71', przekieruj go na ten skrypt (__main__)
-import types
-m = types.ModuleType('zad71')
-sys.modules['zad71'] = m
-# Kopiujemy wszystkie atrybuty z obecnego skryptu do 'modułu' zad71
-m.__dict__.update(sys.modules['__main__'].__dict__)
-
+# 2. Tworzymy "sztuczny" moduł zad71 w pamięci
+if 'zad71' not in sys.modules:
+    # Tworzymy pusty moduł
+    mock_metadata = types.ModuleType('zad71')
+    sys.modules['zad71'] = mock_metadata
+    
+    # Dodajemy bieżący katalog do ścieżek wyszukiwania
+    if str(current_dir) not in sys.path:
+        sys.path.insert(0, str(current_dir))
+    
+    # Rejestrujemy bieżący skrypt (uruchomiony jako __main__) pod nazwą zad71
+    # Dzięki temu pickle znajdzie klasy wewnątrz zad71.py
+    import __main__
+    sys.modules['zad71'] = __main__
+    
 #@st.cache_data
 def handle_openai_key():
     env_path = Path(".env")
