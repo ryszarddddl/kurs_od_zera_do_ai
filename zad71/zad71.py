@@ -193,6 +193,7 @@ else:
         if 'json_cluster_names_and_descriptions' not in st.session_state:
             st.session_state.json_cluster_names_and_descriptions = None
         if st.session_state.json_cluster_names_and_descriptions is None:
+            st.session_state.api_key = handle_openai_key()
             lista_json = [f.name for f in current_dir.glob("*.json")]
             #lista_pkl = [f.name for f in current_dir.iterdir() if f.is_file() and f.suffix == ".json"]
             #if lista_pkl:
@@ -205,12 +206,13 @@ else:
                 if st.button("OK"):
                     st.rerun()
             #else:
+            
             with st.form("Wygeneruj opisy dla modelu treningowego"):
                 CLUSTER_NAMES_AND_DESCRIPTIONS = st.text_input("Nazwa modelu:", value='welcome_survey_cluster_names_and_descriptions_v1.json')
                 submit_button = st.form_submit_button("Zatwierdź nazwę opisu modelu")
                 if not submit_button:
                     st.stop()
-                make_descriptions(st.session_state.d_model,st.session_state.data_df,CLUSTER_NAMES_AND_DESCRIPTIONS,handle_openai_key())
+                make_descriptions(st.session_state.d_model,st.session_state.data_df,CLUSTER_NAMES_AND_DESCRIPTIONS,st.session_state.api_key)
                 st.write('Skończyłem generowanie opisów do modelu treningowego')
                 st.session_state.json_cluster_names_and_descriptions = get_cluster_names_and_descriptions(CLUSTER_NAMES_AND_DESCRIPTIONS)
             if st.button("OK"):
