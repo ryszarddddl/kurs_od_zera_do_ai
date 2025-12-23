@@ -141,6 +141,7 @@ if st.session_state.data_df is None:
     
         # 3. Akcja po wyborze (np. wczytanie ramki danych)
         if st.button("Wczytaj dane"):
+            st.write(str(wybrany_plik))
             st.session_state.data_df = pd.read_csv(str(wybrany_plik), sep=';')
             st.success(f"Pomyślnie wczytano: {wybrany_plik}")
             st.dataframe(st.session_state.data_df.head())
