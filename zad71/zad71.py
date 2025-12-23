@@ -63,8 +63,8 @@ def build_model(MODEL_NAME,DATA,num_clusters=8):
     save_model(kmeans, MODEL_NAME, verbose=False)
 
 #@st.cache_data
-def make_descriptions(_data_model,new_data,FILE_CLUSTER_NAMES_AND_DESCRIPTIONS):
-    api_key = handle_openai_key()
+def make_descriptions(_data_model,new_data,FILE_CLUSTER_NAMES_AND_DESCRIPTIONS,api_key):
+    #api_key = handle_openai_key()
     openai_client = OpenAI(api_key=api_key)
     
     kmeans_pipeline = _data_model
@@ -210,7 +210,7 @@ else:
                 submit_button = st.form_submit_button("Zatwierdź nazwę opisu modelu")
                 if not submit_button:
                     st.stop()
-                make_descriptions(st.session_state.d_model,st.session_state.data_df,CLUSTER_NAMES_AND_DESCRIPTIONS)
+                make_descriptions(st.session_state.d_model,st.session_state.data_df,CLUSTER_NAMES_AND_DESCRIPTIONS,handle_openai_key())
                 st.write('Skończyłem generowanie opisów do modelu treningowego')
                 st.session_state.json_cluster_names_and_descriptions = get_cluster_names_and_descriptions(CLUSTER_NAMES_AND_DESCRIPTIONS)
             if st.button("OK"):
