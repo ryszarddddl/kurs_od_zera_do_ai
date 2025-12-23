@@ -2,26 +2,21 @@ import sys
 import types
 from pathlib import Path
 
-# 1. Ścieżki bezwzględne
+# 1. Definicja ścieżki (bezwzględna lokalizacja folderu zad71)
 current_dir = Path(__file__).resolve().parent
 
-# 2. MECHANIZM NAPRAWCZY DLA MODUŁU 'zad71'
-# Jeśli pickle szuka 'zad71', dajemy mu aktualnie działający skrypt
+# 2. MECHANIZM NAPRAWCZY: Tworzymy wirtualny moduł 'zad71' w pamięci
+# Jeśli model szuka klas w 'zad71', przekierujemy go tutaj
 if 'zad71' not in sys.modules:
-    # Tworzymy wirtualny moduł o nazwie zad71
-    mock_zad71 = types.ModuleType('zad71')
-    sys.modules['zad71'] = mock_zad71
+    import __main__
+    # Tworzymy alias: moduł 'zad71' staje się kopią głównego skryptu
+    sys.modules['zad71'] = __main__
     
-    # Dodajemy bieżący katalog do ścieżek wyszukiwania
+    # Dodajemy folder do ścieżek wyszukiwania, aby importy działały
     if str(current_dir) not in sys.path:
         sys.path.insert(0, str(current_dir))
-    
-    # Kopiujemy atrybuty z głównego modułu (__main__) do zad71
-    # To pozwala modelowi znaleźć klasy zdefiniowane w tym pliku
-    import __main__
-    mock_zad71.__dict__.update(__main__.__dict__)
 
-# 3. DOPIERO TERAZ IMPORTY RESZTY
+# 3. DOPIERO TERAZ DALSZE IMPORTY
 import streamlit as st
 import joblib
 
@@ -179,9 +174,9 @@ else:
             
         if st.button("Wczytaj dane"):
             wybrany_plik = wybrany_plik.replace('.pkl', '')
-            clean_model_name = Path(wybrany_plik).stem  # Pobiera nazwę bez .pkl
-            full_model_path = str(current_dir / clean_model_name)
-            st.session_state.d_model = get_model(full_model_path)
+            model_name = Path(wybrany_plik).stem
+            target_path = str(current_dir / model_name)
+            st.session_state.d_model = get_model(target_path)
             st.success(f"Pomyślnie wczytano: {wybrany_plik}")
             if st.button("OK"):
                 st.rerun()
