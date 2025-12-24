@@ -25,7 +25,7 @@ import pandas as pd  # type: ignore
 import plotly.express as px  # type: ignore
 from dotenv import load_dotenv, set_key
 from openai import OpenAI
-from pycaret.clustering import load_model, predict_model
+from pycaret.clustering import setup, create_model, assign_model, plot_model, save_model, load_model, predict_model
 import os
 
 # To wymusza, aby os był widoczny wszędzie tam, gdzie joblib go szuka
@@ -61,7 +61,7 @@ def handle_openai_key():
 #@st.cache_data
 def build_model(MODEL_NAME,DATA,num_clusters=8):
     #df.head()
-    from pycaret.clustering import setup, create_model, save_model
+    
     s = setup(DATA, session_id=123, html=False, verbose=False)
     #s.dataset.head()
     #s.dataset_transformed.head()
