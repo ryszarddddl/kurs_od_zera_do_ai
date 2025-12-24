@@ -27,6 +27,9 @@ from dotenv import load_dotenv, set_key
 from openai import OpenAI
 from pycaret.clustering import load_model, predict_model
 import os
+
+# To wymusza, aby os był widoczny wszędzie tam, gdzie joblib go szuka
+sys.modules['os'] = os 
   
 #@st.cache_data
 def handle_openai_key():
