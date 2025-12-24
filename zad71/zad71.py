@@ -25,7 +25,8 @@ import pandas as pd  # type: ignore
 import plotly.express as px  # type: ignore
 from dotenv import load_dotenv, set_key
 from openai import OpenAI
-
+from pycaret.clustering import load_model, predict_model
+import os
   
 #@st.cache_data
 def handle_openai_key():
