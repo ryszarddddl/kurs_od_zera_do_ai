@@ -58,10 +58,11 @@ def handle_openai_key():
                 
     return api_key
 
-@st.cache_data
+#@st.cache_data
 def build_model(MODEL_NAME,DATA,num_clusters=8):
     #df.head()
-    s = setup(DATA, session_id=123)
+    from pycaret.clustering import setup, create_model, save_model
+    s = setup(DATA, session_id=123, html=False, verbose=False)
     #s.dataset.head()
     #s.dataset_transformed.head()
     
